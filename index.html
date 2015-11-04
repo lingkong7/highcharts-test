@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title></title>
+    <script src="http://cdn.hcharts.cn/jquery/jquery-2.1.4.min.js"></script>
+    <script src="http://cdn.hcharts.cn/highcharts/highcharts.js"></script>
+    <script src="http://cdn.hcharts.cn/highcharts/adapters/standalone-framework.js"></script>
+    <script>
+        var pointDt;
+        $(function () {
+            $.getJSON('./data-demo/pie1.json',function(data){
+                var lineDt_1  = new Array;
+                var xDt = new Array;
+                var lineDt_2  = new Array;
+
+                $.each(data['total'],function(key,value){
+                    lineDt_1.push(parseInt(value['total']));
+                    xDt.push(value['date']);
+
+                });
+                $.each(data['users'],function(key,value){
+                    lineDt_2.push(parseInt(value['userCount']));
+                });
+                var xZoom = parseInt(xDt.length/7);
+                console.log(xZoom);
+                $('#container').highcharts({
+                    chart: {
+                        zoomType: 'x'
+                    },
+                    title: {
+                        text: 'My first Highcharts chart'
+                    },
+                    legend: {
+                        align: 'left',
+                        verticalAlign: 'top',
+                        x: 0,
+                        y: 100
+                    },
+                    xAxis: {
+                        categories: xDt,
+                        tickInterval: xZoom
+                    },
+                    yAxis: [
+                        {
+                            title: {
+                                text: null
+                            }
+                        },
+                        {
+                            title: {
+                                text: null
+                            },
+                            opposite: true
+                        }
+                    ],
+                    series: [{
+                        type: 'spline',
+                        name: 'Jane',
+                        yAxis: 0,
+                        events: {
+                            click: function (event) {
+                                pointDt = event.point.category;
+                                var pieDt = new Array;
+                                $.getJSON('./data-demo/pie2.json',function(data){
+                                    $.each(data,function(key,value){
+                                        pieDt.push({'name':value['name'],'y':value['value']});
+                                    });
+                                    $('#container').highcharts()
+                                            .addSeries({
+                                                type: 'pie',
+                                                center: [120, 0],
+                                                size: 100,
+                                                data: pieDt
+                                            })
+                                });
+                            }
+                        },
+                        data: lineDt_1
+                    }, {
+                        type: 'spline',
+                        name: 'John',
+                        yAxis: 1,
+                        data: lineDt_2
+                    }]
+                });
+
+            });
+        });
+    </script>
+</head>
+<body>
+    <div id="container" style="min-width:800px;height:400px;"></div>
+</body>
+</html>
