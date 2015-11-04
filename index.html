@@ -7,7 +7,6 @@
     <script src="http://cdn.hcharts.cn/highcharts/highcharts.js"></script>
     <script src="http://cdn.hcharts.cn/highcharts/adapters/standalone-framework.js"></script>
     <script>
-        var pointDt;
         $(function () {
             $.getJSON('./data-demo/pie1.json',function(data){
                 var lineDt_1  = new Array;
@@ -23,7 +22,6 @@
                     lineDt_2.push(parseInt(value['userCount']));
                 });
                 var xZoom = parseInt(xDt.length/7);
-                console.log(xZoom);
                 $('#container').highcharts({
                     chart: {
                         zoomType: 'x'
@@ -67,12 +65,7 @@
                                         pieDt.push({'name':value['name'],'y':value['value']});
                                     });
                                     $('#container').highcharts()
-                                            .addSeries({
-                                                type: 'pie',
-                                                center: [120, 0],
-                                                size: 100,
-                                                data: pieDt
-                                            })
+                                            .series[2].setData(pieDt)
                                 });
                             }
                         },
@@ -82,6 +75,11 @@
                         name: 'John',
                         yAxis: 1,
                         data: lineDt_2
+                    },{
+                        type: 'pie',
+                        center: [120, 0],
+                        size: 100,
+                        data: 0
                     }]
                 });
 
